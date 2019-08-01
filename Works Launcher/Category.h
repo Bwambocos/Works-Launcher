@@ -6,6 +6,9 @@
 class Category : public MyApp::Scene
 {
 private:
+	Font largeFont, midFont;
+	Rect titleRect, exitRect, musicRect, gamesRect, graphicsRect;
+	Texture musicImage, gamesImage, graphicsImage;
 
 public:
 	// 初期化
