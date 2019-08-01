@@ -1,6 +1,8 @@
 ﻿// include
 #pragma once
 #include <Siv3D.hpp>
+#include <Siv3D/Windows.hpp>
+#undef CreateProcess
 
 // 基本情報
 namespace AppInfo
@@ -18,3 +20,31 @@ struct AppData
 };
 
 using MyApp = SceneManager<String, AppData>;
+
+// CreateProcess
+namespace s3d
+{
+	class ProcessInfo
+	{
+	private:
+
+		struct ProcessInfoDetail;
+
+		std::shared_ptr<ProcessInfoDetail> m_detail;
+
+	public:
+
+		ProcessInfo();
+
+		bool isRunning() const;
+
+		Optional<int32> getExitCode() const;
+
+		ProcessInfoDetail* _detail() const;
+	};
+
+	namespace System
+	{
+		ProcessInfo CreateProcess(const FilePath& applicationName, const String& params);
+	}
+}

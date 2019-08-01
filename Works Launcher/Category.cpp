@@ -26,6 +26,8 @@ void Category::update()
 	{
 		if (System::ShowMessageBox(U"終了確認", U"本当に終了しますか？", MessageBoxButtons::YesNo) == MessageBoxSelection::Yes) System::Exit();
 	}
+	if (musicRect.leftClicked()) System::CreateProcess(U"data//MusicRoom//MusicRoom.exe", U"");
+
 }
 
 // 描画
