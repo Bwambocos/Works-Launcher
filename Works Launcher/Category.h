@@ -14,6 +14,7 @@ private:
 	Array<Rect>choicesRects;
 	Array<Texture>choicesImages;
 	Array<String>choicesStrs;
+	bool exitFlag;
 
 public:
 	// 初期化

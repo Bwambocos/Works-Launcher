@@ -20,6 +20,8 @@ Category::Category(const InitData& init) : IScene(init)
 	choicesStrs << U"音楽";
 	choicesStrs << U"ゲーム";
 	choicesStrs << U"画像";
+	const INIData configINI(U"data//config.ini");
+	exitFlag = !configINI.get<bool>(U"Demo", U"flag");
 }
 
 // 更新
@@ -28,7 +30,11 @@ void Category::update()
 	if (exitRect.mouseOver() || choicesRects[0].mouseOver() || choicesRects[1].mouseOver() || choicesRects[2].mouseOver()) Cursor::RequestStyle(CursorStyle::Hand);
 	if (exitRect.leftClicked())
 	{
-		if (System::ShowMessageBox(U"終了確認", U"本当に終了しますか？", MessageBoxButtons::YesNo) == MessageBoxSelection::Yes) System::Exit();
+		if (exitFlag)
+		{
+			if (System::ShowMessageBox(U"終了確認", U"本当に終了しますか？", MessageBoxButtons::YesNo) == MessageBoxSelection::Yes) System::Exit();
+		}
+		else System::ShowMessageBox(U"", U"展示用なので終了出来ません");
 	}
 
 	for (auto i : step(choicesNum))
