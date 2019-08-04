@@ -109,6 +109,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Category.cpp" />
+    <ClCompile Include="CreateProcess.cpp" />
     <ClCompile Include="Games.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
@@ -194,6 +195,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Category.h" />
+    <ClInclude Include="CreateProcess.h" />
     <ClInclude Include="Games.h" />
     <ClInclude Include="Main.h" />
   </ItemGroup>
