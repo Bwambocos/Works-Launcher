@@ -38,6 +38,14 @@ void Category::update()
 			if (i == 0) s3dx::System::CreateProcess(U"data//MusicRoom//MusicRoom.exe", U"");
 			if (i == 1) changeScene(U"Games");
 			if (i == 2) s3dx::System::CreateProcess(U"data//CombViewer//CombViewer.exe", U"");
+			INIData countINI(U"data//Category//logs.ini");
+			if (countINI.isEmpty())
+			{
+				Print << U"Not found count.ini";
+				continue;
+			}
+			countINI.write<int32>(U"count", choicesStrs[i], countINI.get<int32>(U"count", choicesStrs[i]) + 1);
+			countINI.save(U"data//Category//logs.ini");
 		}
 	}
 }
