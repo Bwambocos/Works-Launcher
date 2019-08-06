@@ -19,7 +19,7 @@ Category::Category(const InitData& init) : IScene(init)
 	choicesImages << Texture(U"data//Category//graphicsImage.png");
 	choicesStrs << U"音楽";
 	choicesStrs << U"ゲーム";
-	choicesStrs << U"画像";
+	choicesStrs << U"デザイン";
 	const INIData configINI(U"data//config.ini");
 	exitFlag = !configINI.get<bool>(U"Demo", U"flag");
 }
