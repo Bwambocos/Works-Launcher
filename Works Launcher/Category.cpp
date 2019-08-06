@@ -7,16 +7,16 @@
 // 初期化
 Category::Category(const InitData& init) : IScene(init)
 {
-	largeFont = Font(42, U"data//fontR.ttc", FontStyle::Bold);
-	midFont = Font(36, U"data//fontR.ttc", FontStyle::Bold);
-	titleRect = Rect(5, 5, Scene::Width() - 10, largeFont.height() + 5);
-	exitRect = Rect(5, Scene::Height() - largeFont.height() - 10, Scene::Width() - 10, largeFont.height() + 5);
+	FontAsset::Register(U"Category-largeFont", 42, U"data//fontR.ttc", FontStyle::Bold);
+	FontAsset::Register(U"Category-midFont", 36, U"data//fontR.ttc", FontStyle::Bold);
+	titleRect = Rect(5, 5, Scene::Width() - 10, FontAsset(U"Category-largeFont").height() + 5);
+	exitRect = Rect(5, Scene::Height() - FontAsset(U"Category-largeFont").height() - 10, Scene::Width() - 10, FontAsset(U"Category-largeFont").height() + 5);
 	choicesRects << Rect(25, titleRect.y + titleRect.h + 25, (Scene::Width() - 100) / 3, Scene::Height() - titleRect.h - exitRect.h - 60);
 	choicesRects << Rect(choicesRects[0].x + choicesRects[0].w + 25, choicesRects[0].y, choicesRects[0].w, choicesRects[0].h);
 	choicesRects << Rect(choicesRects[1].x + choicesRects[1].w + 25, choicesRects[0].y, choicesRects[0].w, choicesRects[0].h);
-	choicesImages << Texture(U"data//Category//musicImage.png");
-	choicesImages << Texture(U"data//Category//gamesImage.png");
-	choicesImages << Texture(U"data//Category//graphicsImage.png");
+	TextureAsset::Register(U"choicesImage0", U"data//Category//musicImage.png");
+	TextureAsset::Register(U"choicesImage1", U"data//Category//gamesImage.png");
+	TextureAsset::Register(U"choicesImage2", U"data//Category//graphicsImage.png");
 	choicesStrs << U"音楽";
 	choicesStrs << U"ゲーム";
 	choicesStrs << U"デザイン";
@@ -60,9 +60,9 @@ void Category::update()
 void Category::draw() const
 {
 	titleRect.draw(Color(Palette::White, 200)).drawFrame(1, Palette::Dimgray);
-	largeFont(U"作品の種類を選択して下さい").drawAt(titleRect.center(), Palette::Black);
+	FontAsset(U"Category-largeFont")(U"作品の種類を選択して下さい").drawAt(titleRect.center(), Palette::Black);
 	exitRect.draw(Color(Palette::White, (exitRect.mouseOver() ? 200 : 100))).drawFrame(1, Palette::Dimgray);
-	largeFont(U"終了する").drawAt(exitRect.center(), Palette::Black);
+	FontAsset(U"Category-largeFont")(U"終了する").drawAt(exitRect.center(), Palette::Black);
 
 	for (auto i : step(choicesNum))
 	{
@@ -75,7 +75,7 @@ void Category::draw() const
 				.drawFrame(5, 0, ColorF(Palette::Red, 0.4 + Periodic::Sine0_1(1s) * 0.6));
 		}
 		else choicesRects[i].drawFrame(1, Palette::Dimgray);
-		choicesRects[i](choicesImages[i]).draw(Color(255, 255, 255, (choicesRects[i].mouseOver() ? 200 : 100)));
-		midFont(choicesStrs[i]).drawAt(choicesRects[i].center(), Palette::Black);
+		choicesRects[i](TextureAsset(U"choicesImage" + Format(i))).draw(Color(255, 255, 255, (choicesRects[i].mouseOver() ? 200 : 100)));
+		FontAsset(U"Category-midFont")(choicesStrs[i]).drawAt(choicesRects[i].center(), Palette::Black);
 	}
 }

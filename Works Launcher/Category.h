@@ -8,11 +8,8 @@ class Category : public MyApp::Scene
 private:
 
 	const size_t choicesNum = 3;
-
-	Font largeFont, midFont;
 	Rect titleRect, exitRect;
 	Array<Rect>choicesRects;
-	Array<Texture>choicesImages;
 	Array<String>choicesStrs;
 	bool exitFlag;
 
