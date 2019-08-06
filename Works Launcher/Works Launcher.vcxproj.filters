@@ -316,10 +316,10 @@
     <ClInclude Include="Category.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Games.h">
+    <ClInclude Include="CreateProcess.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CreateProcess.h">
+    <ClInclude Include="Games.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

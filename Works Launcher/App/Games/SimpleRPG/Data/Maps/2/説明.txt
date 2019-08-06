@@ -1,0 +1,13 @@
+AllEnemyList	: ここで出てくる敵をすべて書く。最初の一行は種類の個数を書く
+CanMoveMap	: 動ける範囲を指定する(マップの大きさは256 * 256)
+ChipList	: マップの描画に使うチップのリストを描画する。最初の段に種類の個数を書く
+ChipMap		: 表示するマップ
+DangerMap	: 危険度を書く(255段階)
+EnemyMap	: マップに合わせた出るモンスターの種類を書く
+EnemyPattern	: EnemyMapに書いた種類の敵のパターンを、AllEnemyListの番号で置き換えて書く
+MapName		: そのマップに入った時に表示する名前
+
+EventList	: イベントのリスト
+	使い方(スペース(' ')は、改行(Enter)でもよい)
+	"move n x y" : 移動。nはマップ番号。xはx座標(横)。yはy座標(縦)
+	"battle n a b c..."   : 戦い。nは敵の数, a b c...は、出てくる敵をAllEnemyListの番号で置き換えたもの
