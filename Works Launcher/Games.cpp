@@ -35,6 +35,7 @@ Games::Games(const InitData& init) : IScene(init)
 	baseTilePos = Vec2(100, Scene::Height() - 50 - tileSize / 2);
 	playRect = Rect(900, 340, 220, 85);
 	tileBackgroundRect = Rect(0, Scene::Height() - 25 - tileSize / 2, Scene::Width(), 25 + tileSize / 2);
+	imageBackgroundRect = Rect(50, 50, 640, 360);
 }
 
 // 更新
@@ -92,8 +93,9 @@ void Games::draw() const
 		const Vec2 center = baseTilePos.movedBy(tileOffsetX + i * (tileSize * 2), 0);
 		const RectF tile(Arg::center = center, tileSize);
 
-		TextureAsset(U"games" + Format(i) + U"_icon")(0, tileSize / 2, tileSize, tileSize / 2)
+		TextureAsset(U"games" + Format(i) + U"_icon")
 			.flipped()
+			.resized(tileSize, tileSize)
 			.draw(center.x - tileSize / 2, center.y + tileSize / 2, Arg::top = AlphaF(0.8), Arg::bottom = AlphaF(0.0));
 		if (selectedGameIndex == i)
 		{
@@ -105,4 +107,12 @@ void Games::draw() const
 		}
 		tile(TextureAsset(U"games" + Format(i) + U"_icon")).drawAt(center);
 	}
+
+	// ゲーム説明
+	imageBackgroundRect
+		.stretched(4)
+		.drawShadow(Vec2(0, 3), 8, 0)
+		.draw(AppInfo::backgroundColor)
+		.drawFrame(3, 0, ColorF(Palette::Gold, 0.4 + Periodic::Sine0_1(2s) * 0.6));
+	imageBackgroundRect(TextureAsset(U"games" + Format(selectedGameIndex) + U"_image")).draw();
 }

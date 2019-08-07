@@ -25,7 +25,7 @@ private:
 	Optional<s3dx::ProcessInfo>process;
 	size_t selectedGameIndex = 0;
 	Vec2 baseTilePos;
-	Rect playRect, tileBackgroundRect;
+	Rect playRect, tileBackgroundRect, imageBackgroundRect;
 	double tileOffsetX = 0., targetTileOffsetX = 0., tileOffsetXVelocity = 0.;
 
 public:
