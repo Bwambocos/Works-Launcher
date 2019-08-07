@@ -32,10 +32,13 @@ Games::Games(const InitData& init) : IScene(init)
 		System::ShowMessageBox(U"Not found games");
 		System::Exit();
 	}
+
+	FontAsset::Register(U"Games-largeFont", 36, U"data//fontR.ttc", FontStyle::Bold);
 	baseTilePos = Vec2(100, Scene::Height() - 50 - tileSize / 2);
-	playRect = Rect(900, 340, 220, 85);
 	tileBackgroundRect = Rect(0, Scene::Height() - 25 - tileSize / 2, Scene::Width(), 25 + tileSize / 2);
 	imageBackgroundRect = Rect(50, 50, 640, 360);
+	playRect = Rect(50, imageBackgroundRect.y + imageBackgroundRect.h + 25, (imageBackgroundRect.w - 25) / 2, FontAsset(U"Games-largeFont").height() + 5);
+	readmeRect = Rect(playRect.x + playRect.w + 25, imageBackgroundRect.y + imageBackgroundRect.h + 25, playRect.w, FontAsset(U"Games-largeFont").height() + 5);
 }
 
 // 更新
@@ -58,9 +61,10 @@ void Games::update()
 		}
 	}
 
-	// ゲームの起動
+	// ゲーム起動・説明書表示
+	if (playRect.mouseOver() || readmeRect.mouseOver()) Cursor::RequestStyle(CursorStyle::Hand);
 	if (playRect.leftClicked()) process = s3dx::System::CreateProcess(game.path);
-	if (playRect.mouseOver()) Cursor::RequestStyle(CursorStyle::Hand);
+	if (readmeRect.leftClicked()) process = s3dx::System::CreateProcess(U"C://Windows//system32//notepad.exe", U"/A " + game.readme);
 
 	// 選択しているタイルの変更
 	for (auto i : step(games.size()))
@@ -97,22 +101,29 @@ void Games::draw() const
 			.flipped()
 			.resized(tileSize, tileSize)
 			.draw(center.x - tileSize / 2, center.y + tileSize / 2, Arg::top = AlphaF(0.8), Arg::bottom = AlphaF(0.0));
-		if (selectedGameIndex == i)
-		{
-			tile
-				.stretched(6)
-				.drawShadow(Vec2(0, 3), 8, 0)
-				.draw(AppInfo::backgroundColor)
-				.drawFrame(5, 0, ColorF(Palette::Red, 0.4 + Periodic::Sine0_1(1s) * 0.6));
-		}
+		drawRect(tile, Palette::Red, (i == selectedGameIndex ? Palette::Red : Palette::Gold), Palette::Lightskyblue);
 		tile(TextureAsset(U"games" + Format(i) + U"_icon")).drawAt(center);
 	}
 
-	// ゲーム説明
-	imageBackgroundRect
+	// イメージ画像
+	imageBackgroundRect.drawShadow(Vec2(0, 3), 8, 0);
+	imageBackgroundRect(TextureAsset(U"games" + Format(selectedGameIndex) + U"_image")).draw();
+	imageBackgroundRect.drawFrame(3, 0, Palette::Gray);
+
+	// ゲーム起動・説明書表示
+	drawRect(playRect, Palette::Red, Palette::Gold, Palette::Lightskyblue);
+	FontAsset(U"Games-largeFont")(U"起動する").drawAt(playRect.center(), Palette::Black);
+	drawRect(readmeRect, Palette::Red, Palette::Gold, Palette::Lightskyblue);
+	FontAsset(U"Games-largeFont")(U"説明書を開く").drawAt(readmeRect.center(), Palette::Black);
+}
+
+// 長方形装飾付き描画
+void Games::drawRect(Rect rect, Color framecolor1, Color framecolor2, Color drawcolor) const
+{
+	rect
 		.stretched(4)
 		.drawShadow(Vec2(0, 3), 8, 0)
 		.draw(AppInfo::backgroundColor)
-		.drawFrame(3, 0, ColorF(Palette::Gold, 0.4 + Periodic::Sine0_1(2s) * 0.6));
-	imageBackgroundRect(TextureAsset(U"games" + Format(selectedGameIndex) + U"_image")).draw();
+		.drawFrame(3, 0, ColorF((rect.mouseOver() ? framecolor1 : framecolor2), 0.4 + Periodic::Sine0_1(1s) * 0.6));
+	rect.draw(drawcolor);
 }
