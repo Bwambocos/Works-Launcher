@@ -1,7 +1,7 @@
 ﻿// include
 #include "Main.h"
 #include "Category.h"
-#include "Game.h"
+#include "Games.h"
 
 void Main()
 {

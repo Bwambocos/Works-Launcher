@@ -7,6 +7,7 @@
 Games::Games(const InitData& init) : IScene(init)
 {
 	// ゲーム読み込み
+	size_t index = 0;
 	for (const FilePath& gameDirectory : FileSystem::DirectoryContents(FileSystem::CurrentDirectory() + U"Games", false))
 	{
 		if (!FileSystem::IsDirectory(gameDirectory)) continue;
@@ -17,19 +18,21 @@ Games::Games(const InitData& init) : IScene(init)
 		Game game;
 		game.title = ini[U"Game.title"];
 		game.path = gameDirectory + ini[U"Game.path"];
-		game.icon = Texture(gameDirectory + ini[U"Game.icon"]);
-		game.image = Texture(gameDirectory + ini[U"Game.image"]);
+		TextureAsset::Register(U"games" + Format(index) + U"_icon", gameDirectory + ini[U"Game.icon"], TextureDesc::Mipped);
+		TextureAsset::Register(U"games" + Format(index) + U"_image", gameDirectory + ini[U"Game.image"], TextureDesc::Mipped);
 		game.desc = ini[U"Game.desc"];
 		game.readme = gameDirectory + ini[U"Game.readme"];
 		game.credit = ini[U"Game.credit"];
 		game.tools = ini[U"Game.tools"];
 		games << game;
+		++index;
 	}
 	if (!games)
 	{
 		System::ShowMessageBox(U"Not found games");
 		System::Exit();
 	}
+	baseTilePos = Vec2(100, Scene::Height() - 50 - tileSize / 2);
 	playRect = Rect(900, 340, 220, 85);
 	tileBackgroundRect = Rect(0, Scene::Height() - 25 - tileSize / 2, Scene::Width(), 25 + tileSize / 2);
 }
@@ -37,7 +40,7 @@ Games::Games(const InitData& init) : IScene(init)
 // 更新
 void Games::update()
 {
-	const Game& game = games[selectedGameIndex];
+	Game& game = games[selectedGameIndex];
 
 	// ウィンドウの最小化・復帰
 	if (process)
@@ -89,7 +92,7 @@ void Games::draw() const
 		const Vec2 center = baseTilePos.movedBy(tileOffsetX + i * (tileSize * 2), 0);
 		const RectF tile(Arg::center = center, tileSize);
 
-		g.icon(0, tileSize / 2, tileSize, tileSize / 2)
+		TextureAsset(U"games" + Format(i) + U"_icon")(0, tileSize / 2, tileSize, tileSize / 2)
 			.flipped()
 			.draw(center.x - tileSize / 2, center.y + tileSize / 2, Arg::top = AlphaF(0.8), Arg::bottom = AlphaF(0.0));
 		if (selectedGameIndex == i)
@@ -100,6 +103,6 @@ void Games::draw() const
 				.draw(AppInfo::backgroundColor)
 				.drawFrame(5, 0, ColorF(Palette::Red, 0.4 + Periodic::Sine0_1(1s) * 0.6));
 		}
-		tile(g.icon).drawAt(center);
+		tile(TextureAsset(U"games" + Format(i) + U"_icon")).drawAt(center);
 	}
 }
