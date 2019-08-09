@@ -25,7 +25,8 @@ private:
 	Optional<s3dx::ProcessInfo>process;
 	size_t selectedGameIndex = 0;
 	Vec2 baseTilePos;
-	Rect tileBackgroundRect, imageBackgroundRect, playRect, readmeRect;
+	Rect tileBackgroundRect, imageBackgroundRect, playRect, readmeRect, titleRect, descRect, creditRect, toolsRect;
+	Quad rectHeader;
 	double tileOffsetX = 0., targetTileOffsetX = 0., tileOffsetXVelocity = 0.;
 
 public:
@@ -38,6 +39,9 @@ public:
 	// 描画
 	void draw() const override;
 
-	// 長方形装飾付き描画
-	void drawRect(Rect rect, Color framecolor1, Color framecolor2, Color drawcolor) const;
+	// ボタン描画
+	void drawButton(Rect rect, Color framecolor1, Color framecolor2, Color drawcolor) const;
+
+	// 文字背景描画
+	void drawStrBackground(Rect rect, String header) const;
 };
