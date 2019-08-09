@@ -24,6 +24,7 @@ Games::Games(const InitData& init) : IScene(init)
 		game.readme = gameDirectory + ini[U"Game.readme"];
 		game.credit = ini[U"Game.credit"];
 		game.tools = ini[U"Game.tools"];
+		game.time = ini[U"Game.time"];
 		games << game;
 		++index;
 	}
@@ -36,8 +37,14 @@ Games::Games(const InitData& init) : IScene(init)
 	FontAsset::Register(U"Games-largeFont", 36, U"data//fontR.ttc", FontStyle::Bold);
 	FontAsset::Register(U"Games-midFont", 24, U"data//fontR.ttc");
 	FontAsset::Register(U"Games-smallFont", 18, U"data//fontR.ttc");
-	TextureAsset::Register(U"Games-playIcon", Icon(0xf144, FontAsset(U"Games-largeFont").height() - 5));
-	TextureAsset::Register(U"Games-readmeIcon", Icon(0xf05a, FontAsset(U"Games-largeFont").height() - 5));
+	TextureAsset::Register(U"Games-playIcon", Icon(0xf144, FontAsset(U"Games-largeFont").height() - 7.5));
+	TextureAsset::Register(U"Games-readmeIcon", Icon(0xf05a, FontAsset(U"Games-largeFont").height() - 7.5));
+	TextureAsset::Register(U"Games-imageIcon", Icon(0xf03e, FontAsset(U"Games-smallFont").height() - 7.5));
+	TextureAsset::Register(U"Games-titleIcon", Icon(0xf11b, FontAsset(U"Games-smallFont").height() - 7.5));
+	TextureAsset::Register(U"Games-descIcon", Icon(0xf075, FontAsset(U"Games-smallFont").height() - 7.5));
+	TextureAsset::Register(U"Games-creditIcon", Icon(0xf0c0, FontAsset(U"Games-smallFont").height() - 7.5));
+	TextureAsset::Register(U"Games-toolsIcon", Icon(0xf7d9, FontAsset(U"Games-smallFont").height() - 7.5));
+	TextureAsset::Register(U"Games-timeIcon", Icon(0xf1da, FontAsset(U"Games-smallFont").height() - 7.5));
 	baseTilePos = Vec2(100, Scene::Height() - 50 - tileSize / 2);
 	tileBackgroundRect = Rect(0, Scene::Height() - 25 - tileSize / 2, Scene::Width(), 25 + tileSize / 2);
 	imageBackgroundRect = Rect(50, 50, 640, 360);
@@ -46,8 +53,9 @@ Games::Games(const InitData& init) : IScene(init)
 	titleRect = Rect(imageBackgroundRect.x + imageBackgroundRect.w + 50, imageBackgroundRect.y, Scene::Width() - 50 - (imageBackgroundRect.x + imageBackgroundRect.w + 50), FontAsset(U"Games-largeFont").height() + 5);
 	descRect = Rect(titleRect.x, titleRect.y + titleRect.h + 35, titleRect.w, FontAsset(U"Games-midFont").height() * 5 + 5);
 	creditRect = Rect(titleRect.x, descRect.y + descRect.h + 35, titleRect.w, FontAsset(U"Games-smallFont").height() * 2 + 5);
-	toolsRect = Rect(titleRect.x, creditRect.y + creditRect.h + 35, titleRect.w, FontAsset(U"Games-smallFont").height() + 5);
-	rectHeader = Quad(Vec2(0, 0), Vec2(100, 0), Vec2(100 + FontAsset(U"Games-smallFont").height(), FontAsset(U"Games-smallFont").height()), Vec2(0, FontAsset(U"Games-smallFont").height()));
+	toolsRect = Rect(titleRect.x, creditRect.y + creditRect.h + 35, (titleRect.w - 25) / 2, FontAsset(U"Games-smallFont").height() + 5);
+	timeRect = Rect(toolsRect.x + toolsRect.w + 25, toolsRect.y, toolsRect.w, FontAsset(U"Games-smallFont").height() + 5);
+	rectHeader = Quad(Vec2(0, 0), Vec2(125, 0), Vec2(125 + FontAsset(U"Games-smallFont").height(), FontAsset(U"Games-smallFont").height()), Vec2(0, FontAsset(U"Games-smallFont").height()));
 }
 
 // 更新
@@ -119,29 +127,32 @@ void Games::draw() const
 		.movedBy(imageBackgroundRect.x, imageBackgroundRect.y - FontAsset(U"Games-smallFont").height() + 3)
 		.draw(Palette::White)
 		.drawFrame(3, 0, Palette::Gray);
-	FontAsset(U"Games-smallFont")(U"ゲーム画面").draw(imageBackgroundRect.x + 5, imageBackgroundRect.y - FontAsset(U"Games-smallFont").height() + 3, Palette::Black);
+	TextureAsset(U"Games-imageIcon").drawAt(imageBackgroundRect.x + FontAsset(U"Games-smallFont").height() / 2 + 5, imageBackgroundRect.y - FontAsset(U"Games-smallFont").height() / 2 + 3, Palette::Black);
+	FontAsset(U"Games-smallFont")(U"ゲーム画面").draw(imageBackgroundRect.x + FontAsset(U"Games-smallFont").height() + 5, imageBackgroundRect.y - FontAsset(U"Games-smallFont").height() + 3, Palette::Black);
 	imageBackgroundRect.drawShadow(Vec2(0, 3), 8, 0);
 	imageBackgroundRect(TextureAsset(U"games" + Format(selectedGameIndex) + U"_image")).draw();
 	imageBackgroundRect.drawFrame(3, 0, Palette::Gray);
 
 	// ゲーム起動・説明書表示
 	drawButton(playRect, Palette::Red, Palette::Gold, Palette::Lightskyblue);
-	FontAsset(U"Games-largeFont")(U"起動する").drawAt(playRect.center().movedBy(FontAsset(U"Games-largeFont").height() / 2, 0), Palette::Black);
 	TextureAsset(U"Games-playIcon").drawAt(playRect.center().movedBy(-FontAsset(U"Games-largeFont")(U"起動する").region().w / 2, 0), Palette::Black);
+	FontAsset(U"Games-largeFont")(U"起動する").drawAt(playRect.center().movedBy(FontAsset(U"Games-largeFont").height() / 2, 0), Palette::Black);
 	drawButton(readmeRect, Palette::Red, Palette::Gold, Palette::Lightskyblue);
-	FontAsset(U"Games-largeFont")(U"説明書を開く").drawAt(readmeRect.center().movedBy(FontAsset(U"Games-largeFont").height() / 2, 0), Palette::Black);
 	TextureAsset(U"Games-readmeIcon").drawAt(readmeRect.center().movedBy(-FontAsset(U"Games-largeFont")(U"説明書を開く").region().w / 2, 0), Palette::Black);
+	FontAsset(U"Games-largeFont")(U"説明書を開く").drawAt(readmeRect.center().movedBy(FontAsset(U"Games-largeFont").height() / 2, 0), Palette::Black);
 
 	// ゲーム情報
 	const Game& game = games[selectedGameIndex];
-	drawStrBackground(titleRect, U"ゲーム名");
+	drawStrBackground(titleRect, U"ゲーム名", U"Games-titleIcon");
 	FontAsset(U"Games-largeFont")(game.title).draw(titleRect.stretched(-5, -2.5), Palette::Black);
-	drawStrBackground(descRect, U"ゲーム説明");
+	drawStrBackground(descRect, U"ゲーム説明", U"Games-descIcon");
 	FontAsset(U"Games-midFont")(game.desc).draw(descRect.stretched(-5, -2.5), Palette::Black);
-	drawStrBackground(creditRect, U"クレジット");
+	drawStrBackground(creditRect, U"クレジット", U"Games-creditIcon");
 	FontAsset(U"Games-smallFont")(game.credit).draw(creditRect.stretched(-5, -2.5), Palette::Black);
-	drawStrBackground(toolsRect, U"開発ツール");
+	drawStrBackground(toolsRect, U"開発ツール", U"Games-toolsIcon");
 	FontAsset(U"Games-smallFont")(game.tools).draw(toolsRect.stretched(-5, -2.5), Palette::Black);
+	drawStrBackground(timeRect, U"開発期間", U"Games-timeIcon");
+	FontAsset(U"Games-smallFont")(game.time).draw(timeRect.stretched(-5, -2.5), Palette::Black);
 }
 
 // ボタン描画
@@ -156,13 +167,14 @@ void Games::drawButton(Rect rect, Color framecolor1, Color framecolor2, Color dr
 }
 
 // 文字背景描画
-void Games::drawStrBackground(Rect rect, String header) const
+void Games::drawStrBackground(Rect rect, String header, String icon) const
 {
 	rectHeader
 		.movedBy(rect.x, rect.y - FontAsset(U"Games-smallFont").height() + 3)
 		.draw(Palette::White)
 		.drawFrame(3, 0, Palette::Gray);
-	FontAsset(U"Games-smallFont")(header).draw(rect.x + 5, rect.y - FontAsset(U"Games-smallFont").height() + 3, Palette::Black);
+	TextureAsset(icon).drawAt(rect.x + FontAsset(U"Games-smallFont").height() / 2 + 5, rect.y - FontAsset(U"Games-smallFont").height() / 2 + 3, Palette::Black);
+	FontAsset(U"Games-smallFont")(header).draw(rect.x + FontAsset(U"Games-smallFont").height() + 5, rect.y - FontAsset(U"Games-smallFont").height() + 3, Palette::Black);
 	rect
 		.drawShadow(Vec2(0, 3), 8, 0)
 		.draw(AppInfo::backgroundColor)

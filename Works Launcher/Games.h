@@ -19,13 +19,14 @@ private:
 		FilePath readme;
 		String credit;
 		String tools;
+		String time;
 	};
 
 	Array<Game>games;
 	Optional<s3dx::ProcessInfo>process;
 	size_t selectedGameIndex = 0;
 	Vec2 baseTilePos;
-	Rect tileBackgroundRect, imageBackgroundRect, playRect, readmeRect, titleRect, descRect, creditRect, toolsRect;
+	Rect tileBackgroundRect, imageBackgroundRect, playRect, readmeRect, titleRect, descRect, creditRect, toolsRect, timeRect;
 	Quad rectHeader;
 	double tileOffsetX = 0., targetTileOffsetX = 0., tileOffsetXVelocity = 0.;
 
@@ -43,5 +44,5 @@ public:
 	void drawButton(Rect rect, Color framecolor1, Color framecolor2, Color drawcolor) const;
 
 	// 文字背景描画
-	void drawStrBackground(Rect rect, String header) const;
+	void drawStrBackground(Rect rect, String header, String icon) const;
 };
