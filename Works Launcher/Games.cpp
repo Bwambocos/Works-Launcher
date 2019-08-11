@@ -45,6 +45,8 @@ Games::Games(const InitData& init) : IScene(init)
 	TextureAsset::Register(U"Games-creditIcon", Icon(0xf0c0, FontAsset(U"Games-smallFont").height() - 7.5));
 	TextureAsset::Register(U"Games-toolsIcon", Icon(0xf7d9, FontAsset(U"Games-smallFont").height() - 7.5));
 	TextureAsset::Register(U"Games-timeIcon", Icon(0xf1da, FontAsset(U"Games-smallFont").height() - 7.5));
+	TextureAsset::Register(U"Games-leftIcon", Icon(0xf137, 42));
+	TextureAsset::Register(U"Games-rightIcon", Icon(0xf138, 42));
 	baseTilePos = Vec2(100, Scene::Height() - 50 - tileSize / 2);
 	tileBackgroundRect = Rect(0, Scene::Height() - 25 - tileSize / 2, Scene::Width(), 25 + tileSize / 2);
 	imageBackgroundRect = Rect(50, 50, 640, 360);
@@ -55,6 +57,8 @@ Games::Games(const InitData& init) : IScene(init)
 	creditRect = Rect(titleRect.x, descRect.y + descRect.h + 35, titleRect.w, FontAsset(U"Games-smallFont").height() * 2 + 5);
 	toolsRect = Rect(titleRect.x, creditRect.y + creditRect.h + 35, (titleRect.w - 25) / 2, FontAsset(U"Games-smallFont").height() + 5);
 	timeRect = Rect(toolsRect.x + toolsRect.w + 25, toolsRect.y, toolsRect.w, FontAsset(U"Games-smallFont").height() + 5);
+	leftIconPos = Vec2(5, Scene::Height() - TextureAsset(U"Games-leftIcon").height() - 2.5);
+	rightIconPos = Vec2(Scene::Width() - TextureAsset(U"Games-rightIcon").width() - 5, Scene::Height() - TextureAsset(U"Games-rightIcon").height() - 2.5);
 	rectHeader = Quad(Vec2(0, 0), Vec2(125, 0), Vec2(125 + FontAsset(U"Games-smallFont").height(), FontAsset(U"Games-smallFont").height()), Vec2(0, FontAsset(U"Games-smallFont").height()));
 }
 
@@ -90,8 +94,8 @@ void Games::update()
 		if (tile.leftClicked()) selectedGameIndex = i;
 		if (tile.mouseOver()) Cursor::RequestStyle(CursorStyle::Hand);
 	}
-	if (KeyLeft.down()) selectedGameIndex--;
-	if (KeyRight.down()) selectedGameIndex++;
+	if (KeyLeft.down() || TextureAsset(U"Games-leftIcon").region(leftIconPos).leftClicked()) selectedGameIndex--;
+	if (KeyRight.down() || TextureAsset(U"Games-rightIcon").region(rightIconPos).leftClicked()) selectedGameIndex++;
 	selectedGameIndex += Mouse::Wheel();
 	selectedGameIndex = Max((long long)selectedGameIndex, 0LL);
 	selectedGameIndex = Min<unsigned long long>(selectedGameIndex, (long long)games.size() - 1);
@@ -121,6 +125,8 @@ void Games::draw() const
 		drawButton(tile, Palette::Red, (i == selectedGameIndex ? Palette::Red : Palette::Gold), Palette::Lightskyblue);
 		tile(TextureAsset(U"games" + Format(i) + U"_icon")).drawAt(center);
 	}
+	if (selectedGameIndex > 0) TextureAsset(U"Games-leftIcon").draw(leftIconPos, (TextureAsset(U"Games-leftIcon").region(leftIconPos).mouseOver() ? Palette::Orange : Palette::White));
+	if (selectedGameIndex + 1 < games.size()) TextureAsset(U"Games-rightIcon").draw(rightIconPos, (TextureAsset(U"Games-rightIcon").region(rightIconPos).mouseOver() ? Palette::Orange : Palette::White));
 
 	// イメージ画像
 	rectHeader

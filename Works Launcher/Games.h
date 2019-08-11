@@ -25,7 +25,7 @@ private:
 	Array<Game>games;
 	Optional<s3dx::ProcessInfo>process;
 	size_t selectedGameIndex = 0;
-	Vec2 baseTilePos;
+	Vec2 baseTilePos, leftIconPos, rightIconPos;
 	Rect tileBackgroundRect, imageBackgroundRect, playRect, readmeRect, titleRect, descRect, creditRect, toolsRect, timeRect;
 	Quad rectHeader;
 	double tileOffsetX = 0., targetTileOffsetX = 0., tileOffsetXVelocity = 0.;
