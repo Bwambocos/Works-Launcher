@@ -28,6 +28,8 @@ private:
 	Vec2 baseTilePos, leftIconPos, rightIconPos;
 	Rect tileBackgroundRect, imageBackgroundRect, playRect, readmeRect, titleRect, descRect, creditRect, toolsRect, timeRect;
 	Quad rectHeader;
+	Effect m_effect;
+	Stopwatch m_effectBackgroundStopwatch;
 	double tileOffsetX = 0., targetTileOffsetX = 0., tileOffsetXVelocity = 0.;
 
 public:

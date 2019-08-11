@@ -3,6 +3,24 @@
 
 // ゲーム選択画面
 
+struct TitleBackGroundEffect : IEffect
+{
+	Line m_line;
+
+	TitleBackGroundEffect()
+	{
+		const Vec2 pos = RandomVec2(Scene::Width(), Scene::Height());
+		const Vec2 direction = Circular(Scene::Width() + Scene::Height(), Random(360_deg));
+		m_line.set(pos - direction, pos + direction);
+	}
+
+	bool update(double timeSec)
+	{
+		m_line.draw(2, AlphaF((1.0 - Abs(timeSec - 1.0)) * 0.3));
+		return timeSec < 2.0;
+	}
+};
+
 // 初期化
 Games::Games(const InitData& init) : IScene(init)
 {
@@ -60,6 +78,7 @@ Games::Games(const InitData& init) : IScene(init)
 	leftIconPos = Vec2(5, Scene::Height() - TextureAsset(U"Games-leftIcon").height() - 2.5);
 	rightIconPos = Vec2(Scene::Width() - TextureAsset(U"Games-rightIcon").width() - 5, Scene::Height() - TextureAsset(U"Games-rightIcon").height() - 2.5);
 	rectHeader = Quad(Vec2(0, 0), Vec2(125, 0), Vec2(125 + FontAsset(U"Games-smallFont").height(), FontAsset(U"Games-smallFont").height()), Vec2(0, FontAsset(U"Games-smallFont").height()));
+	m_effectBackgroundStopwatch.start();
 }
 
 // 更新
@@ -106,11 +125,23 @@ void Games::update()
 	if (tile.x <= 0) targetTileOffsetX += tileSize;
 	else if (Scene::Width() <= tile.tr().x) targetTileOffsetX -= tileSize;
 	tileOffsetX = Math::SmoothDamp(tileOffsetX, targetTileOffsetX, tileOffsetXVelocity, 0.1, Scene::DeltaTime());
+
+	// 背景エフェクト
+	if (m_effectBackgroundStopwatch.elapsed() > 50ms)
+	{
+		m_effect.add<TitleBackGroundEffect>();
+		m_effectBackgroundStopwatch.restart();
+	}
 }
 
 // 描画
 void Games::draw() const
 {
+	// 背景エフェクト
+	Graphics2D::SetBlendState(BlendState::Additive);
+	m_effect.update();
+	Graphics2D::SetBlendState(BlendState::Default);
+
 	// タイル
 	tileBackgroundRect.draw(ColorF(0.2, 0.3, 0.4));
 	for (auto [i, g] : Indexed(games))
