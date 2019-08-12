@@ -89,11 +89,17 @@ void Games::update()
 	{
 		if (process->isRunning())
 		{
+			if (!gameplayStopwatch.isRunning()) gameplayStopwatch.restart();
 			Window::Minimize();
 			return;
 		}
 		else
 		{
+			gameplayStopwatch.pause();
+			INIData ini(U"data//Games//logs.ini");
+			ini.write<int32>(games[selectedGameIndex].title, U"count", ini.get<int32>(games[selectedGameIndex].title, U"count") + 1);
+			ini.write<int32>(games[selectedGameIndex].title, U"time", ini.get<int32>(games[selectedGameIndex].title, U"time") + gameplayStopwatch.ms());
+			ini.save(U"data//Games//logs.ini");
 			Window::Restore();
 			process = none;
 		}

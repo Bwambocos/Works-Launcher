@@ -29,7 +29,7 @@ private:
 	Rect tileBackgroundRect, imageBackgroundRect, playRect, readmeRect, titleRect, descRect, creditRect, toolsRect, timeRect;
 	Quad rectHeader;
 	Effect m_effect;
-	Stopwatch m_effectBackgroundStopwatch;
+	Stopwatch m_effectBackgroundStopwatch, gameplayStopwatch;
 	double tileOffsetX = 0., targetTileOffsetX = 0., tileOffsetXVelocity = 0.;
 
 public:
