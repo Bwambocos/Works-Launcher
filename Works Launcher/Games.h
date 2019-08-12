@@ -43,7 +43,7 @@ public:
 	void draw() const override;
 
 	// ボタン描画
-	void drawButton(Rect rect, Color framecolor1, Color framecolor2, Color drawcolor) const;
+	void drawButton(Rect rect, bool highlight = false) const;
 
 	// 文字背景描画
 	void drawStrBackground(Rect rect, String header, String icon) const;
