@@ -149,7 +149,7 @@ void Games::update()
 void Games::draw() const
 {
 	// メニューへ戻る
-	TextureAsset(U"Games-homeIcon").draw(homeIconPos, (TextureAsset(U"Games-homeIcon").region(homeIconPos).mouseOver() ? AppInfo::schemeColor5 : AppInfo::schemeColor4));
+	TextureAsset(U"Games-homeIcon").draw(homeIconPos, (TextureAsset(U"Games-homeIcon").region(homeIconPos).mouseOver() ? getData().schemeColor5 : getData().schemeColor4));
 
 	// 背景エフェクト
 	Graphics2D::SetBlendState(BlendState::Additive);
@@ -157,7 +157,7 @@ void Games::draw() const
 	Graphics2D::SetBlendState(BlendState::Default);
 
 	// タイル
-	tileBackgroundRect.draw(AppInfo::schemeColor2);
+	tileBackgroundRect.draw(getData().schemeColor2);
 	for (auto [i, g] : Indexed(games))
 	{
 		const Vec2 center = baseTilePos.movedBy(tileOffsetX + i * (tileSize * 2), 0);
@@ -170,19 +170,19 @@ void Games::draw() const
 		drawButton(tile, i == selectedGameIndex);
 		tile(TextureAsset(U"games" + Format(i) + U"_icon")).drawAt(center);
 	}
-	if (selectedGameIndex > 0) TextureAsset(U"Games-leftIcon").draw(leftIconPos, (TextureAsset(U"Games-leftIcon").region(leftIconPos).mouseOver() ? AppInfo::schemeColor5 : AppInfo::schemeColor4));
-	if (selectedGameIndex + 1 < games.size()) TextureAsset(U"Games-rightIcon").draw(rightIconPos, (TextureAsset(U"Games-rightIcon").region(rightIconPos).mouseOver() ? AppInfo::schemeColor5 : AppInfo::schemeColor4));
+	if (selectedGameIndex > 0) TextureAsset(U"Games-leftIcon").draw(leftIconPos, (TextureAsset(U"Games-leftIcon").region(leftIconPos).mouseOver() ? getData().schemeColor5 : getData().schemeColor4));
+	if (selectedGameIndex + 1 < games.size()) TextureAsset(U"Games-rightIcon").draw(rightIconPos, (TextureAsset(U"Games-rightIcon").region(rightIconPos).mouseOver() ? getData().schemeColor5 : getData().schemeColor4));
 
 	// イメージ画像
 	rectHeader
 		.movedBy(imageBackgroundRect.x, imageBackgroundRect.y - FontAsset(U"Games-smallFont").height() + 3)
-		.draw(AppInfo::schemeColor2)
-		.drawFrame(3, 0, AppInfo::schemeColor3);
+		.draw(getData().schemeColor2)
+		.drawFrame(3, 0, getData().schemeColor3);
 	TextureAsset(U"Games-imageIcon").drawAt(imageBackgroundRect.x + FontAsset(U"Games-smallFont").height() / 2 + 5, imageBackgroundRect.y - FontAsset(U"Games-smallFont").height() / 2 + 3, Palette::White);
 	FontAsset(U"Games-smallFont")(U"ゲーム画面").draw(imageBackgroundRect.x + FontAsset(U"Games-smallFont").height() + 5, imageBackgroundRect.y - FontAsset(U"Games-smallFont").height() + 3, Palette::White);
 	imageBackgroundRect.drawShadow(Vec2(0, 3), 8, 0);
 	imageBackgroundRect(TextureAsset(U"games" + Format(selectedGameIndex) + U"_image")).draw();
-	imageBackgroundRect.drawFrame(3, 0, AppInfo::schemeColor3);
+	imageBackgroundRect.drawFrame(3, 0, getData().schemeColor3);
 
 	// ゲーム起動・説明書表示
 	drawButton(playRect);
@@ -212,9 +212,9 @@ void Games::drawButton(Rect rect, bool highlight) const
 	rect
 		.stretched(4)
 		.drawShadow(Vec2(0, 3), 8, 0)
-		.draw(AppInfo::schemeColor3)
-		.drawFrame(3, 0, ColorF((rect.mouseOver() || highlight ? AppInfo::schemeColor5 : AppInfo::schemeColor4), 0.4 + (rect.mouseOver() ? 1 : Periodic::Sine0_1(1s)) * 0.6));
-	rect.draw(AppInfo::schemeColor3);
+		.draw(getData().schemeColor3)
+		.drawFrame(3, 0, ColorF((rect.mouseOver() || highlight ? getData().schemeColor5 : getData().schemeColor4), 0.4 + (rect.mouseOver() ? 1 : Periodic::Sine0_1(1s)) * 0.6));
+	rect.draw(getData().schemeColor3);
 }
 
 // 文字背景描画
@@ -222,13 +222,12 @@ void Games::drawStrBackground(Rect rect, String header, String icon) const
 {
 	rectHeader
 		.movedBy(rect.x, rect.y - FontAsset(U"Games-smallFont").height() + 3)
-		.draw(AppInfo::schemeColor2)
-		.drawFrame(3, 0, AppInfo::schemeColor3);
+		.draw(getData().schemeColor2)
+		.drawFrame(3, 0, getData().schemeColor3);
 	TextureAsset(icon).drawAt(rect.x + FontAsset(U"Games-smallFont").height() / 2 + 5, rect.y - FontAsset(U"Games-smallFont").height() / 2 + 3, Palette::White);
 	FontAsset(U"Games-smallFont")(header).draw(rect.x + FontAsset(U"Games-smallFont").height() + 5, rect.y - FontAsset(U"Games-smallFont").height() + 3, Palette::White);
 	rect
 		.drawShadow(Vec2(0, 3), 8, 0)
-		.draw(AppInfo::backgroundColor)
-		.draw(AppInfo::schemeColor2)
-		.drawFrame(3, 0, AppInfo::schemeColor3);
+		.draw(getData().schemeColor2)
+		.drawFrame(3, 0, getData().schemeColor3);
 }
