@@ -59,10 +59,10 @@ void Category::update()
 // 描画
 void Category::draw() const
 {
-	titleRect.draw(Color(Palette::White, 200)).drawFrame(1, Palette::Dimgray);
-	FontAsset(U"Category-largeFont")(U"作品の種類を選択して下さい").drawAt(titleRect.center(), Palette::Black);
-	exitRect.draw(Color(Palette::White, (exitRect.mouseOver() ? 200 : 100))).drawFrame(1, Palette::Dimgray);
-	FontAsset(U"Category-largeFont")(U"終了する").drawAt(exitRect.center(), Palette::Black);
+	titleRect.draw(Color(AppInfo::schemeColor2, 200)).drawFrame(1, AppInfo::schemeColor3);
+	FontAsset(U"Category-largeFont")(U"作品の種類を選択して下さい").drawAt(titleRect.center(), Palette::White);
+	exitRect.draw(Color(AppInfo::schemeColor2, (exitRect.mouseOver() ? 200 : 100))).drawFrame(1, AppInfo::schemeColor3);
+	FontAsset(U"Category-largeFont")(U"終了する").drawAt(exitRect.center(), Palette::White);
 
 	for (auto i : step(choicesNum))
 	{
@@ -72,10 +72,10 @@ void Category::draw() const
 				.stretched(6)
 				.drawShadow(Vec2(0, 3), 8, 0)
 				.draw(AppInfo::backgroundColor)
-				.drawFrame(5, 0, ColorF(Palette::Red, 0.4 + Periodic::Sine0_1(1s) * 0.6));
+				.drawFrame(5, 0, ColorF(AppInfo::schemeColor5, 0.4 + Periodic::Sine0_1(1s) * 0.6));
 		}
-		else choicesRects[i].drawFrame(1, Palette::Dimgray);
-		choicesRects[i](TextureAsset(U"choicesImage" + Format(i))).draw(Color(255, 255, 255, (choicesRects[i].mouseOver() ? 200 : 100)));
-		FontAsset(U"Category-midFont")(choicesStrs[i]).drawAt(choicesRects[i].center(), Palette::Black);
+		else choicesRects[i].drawFrame(1, AppInfo::schemeColor4);
+		choicesRects[i](TextureAsset(U"choicesImage" + Format(i))).draw(Color(AppInfo::schemeColor3, (choicesRects[i].mouseOver() ? 200 : 100)));
+		FontAsset(U"Category-midFont")(choicesStrs[i]).drawAt(choicesRects[i].center(), Palette::White);
 	}
 }
