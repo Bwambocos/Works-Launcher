@@ -40,7 +40,7 @@ void setDrawMode(AppData& data)
 	{
 		data.schemeColor1 = Color(64, 138, 241);
 		data.schemeColor2 = Color(90, 162, 246);
-		data.schemeColor3 = Color(90, 162, 246);
+		data.schemeColor3 = Color(120, 182, 250);
 		data.schemeColor4 = Color(136, 203, 250);
 		data.schemeColor5 = Color(168, 215, 250);
 		data.stringColor = Palette::Black;
