@@ -65,6 +65,7 @@ Games::Games(const InitData& init) : IScene(init)
 	TextureAsset::Register(U"Games-timeIcon", Icon(0xf1da, FontAsset(U"Games-smallFont").height() - 7.5));
 	TextureAsset::Register(U"Games-leftIcon", Icon(0xf137, 42));
 	TextureAsset::Register(U"Games-rightIcon", Icon(0xf138, 42));
+	TextureAsset::Register(U"Games-homeIcon", Icon(0xf015, 48));
 	baseTilePos = Vec2(100, Scene::Height() - 50 - tileSize / 2);
 	tileBackgroundRect = Rect(0, Scene::Height() - 25 - tileSize / 2, Scene::Width(), 25 + tileSize / 2);
 	imageBackgroundRect = Rect(50, 50, 640, 360);
@@ -77,6 +78,7 @@ Games::Games(const InitData& init) : IScene(init)
 	timeRect = Rect(toolsRect.x + toolsRect.w + 25, toolsRect.y, toolsRect.w, FontAsset(U"Games-smallFont").height() + 5);
 	leftIconPos = Vec2(5, Scene::Height() - TextureAsset(U"Games-leftIcon").height() - 2.5);
 	rightIconPos = Vec2(Scene::Width() - TextureAsset(U"Games-rightIcon").width() - 5, Scene::Height() - TextureAsset(U"Games-rightIcon").height() - 2.5);
+	homeIconPos = Vec2(Scene::Width() - TextureAsset(U"Games-homeIcon").width() - 5, 5);
 	rectHeader = Quad(Vec2(0, 0), Vec2(125, 0), Vec2(125 + FontAsset(U"Games-smallFont").height(), FontAsset(U"Games-smallFont").height()), Vec2(0, FontAsset(U"Games-smallFont").height()));
 	m_effectBackgroundStopwatch.start();
 }
@@ -105,6 +107,16 @@ void Games::update()
 		}
 	}
 
+	// メニューへ戻る
+	if (TextureAsset(U"Games-homeIcon").region(homeIconPos).leftClicked()) changeScene(U"Category");
+
+	// 背景エフェクト
+	if (m_effectBackgroundStopwatch.elapsed() > 50ms)
+	{
+		m_effect.add<TitleBackGroundEffect>();
+		m_effectBackgroundStopwatch.restart();
+	}
+
 	// ゲーム起動・説明書表示
 	Game& game = games[selectedGameIndex];
 	if (playRect.mouseOver() || readmeRect.mouseOver()) Cursor::RequestStyle(CursorStyle::Hand);
@@ -131,18 +143,14 @@ void Games::update()
 	if (tile.x <= 0) targetTileOffsetX += tileSize;
 	else if (Scene::Width() <= tile.tr().x) targetTileOffsetX -= tileSize;
 	tileOffsetX = Math::SmoothDamp(tileOffsetX, targetTileOffsetX, tileOffsetXVelocity, 0.1, Scene::DeltaTime());
-
-	// 背景エフェクト
-	if (m_effectBackgroundStopwatch.elapsed() > 50ms)
-	{
-		m_effect.add<TitleBackGroundEffect>();
-		m_effectBackgroundStopwatch.restart();
-	}
 }
 
 // 描画
 void Games::draw() const
 {
+	// メニューへ戻る
+	TextureAsset(U"Games-homeIcon").draw(homeIconPos, (TextureAsset(U"Games-homeIcon").region(homeIconPos).mouseOver() ? AppInfo::schemeColor5 : AppInfo::schemeColor4));
+
 	// 背景エフェクト
 	Graphics2D::SetBlendState(BlendState::Additive);
 	m_effect.update();
@@ -162,8 +170,8 @@ void Games::draw() const
 		drawButton(tile, i == selectedGameIndex);
 		tile(TextureAsset(U"games" + Format(i) + U"_icon")).drawAt(center);
 	}
-	if (selectedGameIndex > 0) TextureAsset(U"Games-leftIcon").draw(leftIconPos, (TextureAsset(U"Games-leftIcon").region(leftIconPos).mouseOver() ? Palette::Orange : Palette::White));
-	if (selectedGameIndex + 1 < games.size()) TextureAsset(U"Games-rightIcon").draw(rightIconPos, (TextureAsset(U"Games-rightIcon").region(rightIconPos).mouseOver() ? Palette::Orange : Palette::White));
+	if (selectedGameIndex > 0) TextureAsset(U"Games-leftIcon").draw(leftIconPos, (TextureAsset(U"Games-leftIcon").region(leftIconPos).mouseOver() ? AppInfo::schemeColor5 : AppInfo::schemeColor4));
+	if (selectedGameIndex + 1 < games.size()) TextureAsset(U"Games-rightIcon").draw(rightIconPos, (TextureAsset(U"Games-rightIcon").region(rightIconPos).mouseOver() ? AppInfo::schemeColor5 : AppInfo::schemeColor4));
 
 	// イメージ画像
 	rectHeader

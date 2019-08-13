@@ -25,7 +25,7 @@ private:
 	Array<Game>games;
 	Optional<s3dx::ProcessInfo>process;
 	size_t selectedGameIndex = 0;
-	Vec2 baseTilePos, leftIconPos, rightIconPos;
+	Vec2 baseTilePos, leftIconPos, rightIconPos, homeIconPos;
 	Rect tileBackgroundRect, imageBackgroundRect, playRect, readmeRect, titleRect, descRect, creditRect, toolsRect, timeRect;
 	Quad rectHeader;
 	Effect m_effect;
