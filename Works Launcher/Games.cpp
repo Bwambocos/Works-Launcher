@@ -160,6 +160,9 @@ void Games::update()
 	if (tile.x <= 0) targetTileOffsetX += tileSize;
 	else if (Scene::Width() <= tile.tr().x) targetTileOffsetX -= tileSize;
 	tileOffsetX = Math::SmoothDamp(tileOffsetX, targetTileOffsetX, tileOffsetXVelocity, 0.1, Scene::DeltaTime());
+
+	// 隠し要素
+	if (KeyShift.pressed() && KeyD.pressed() && KeyO.pressed() && KeyG.pressed()) AudioAsset(U"dog").play();
 }
 
 // 描画

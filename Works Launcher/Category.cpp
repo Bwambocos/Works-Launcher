@@ -23,6 +23,7 @@ Category::Category(const InitData& init) : IScene(init)
 	choicesStrs << U"デザイン";
 	lightIconPos = Vec2(Scene::Width() - TextureAsset(U"lightIcon").width() - 10, 10);
 	AudioAsset::Register(U"cursorAudio", U"data//cursorAudio.mp3");
+	AudioAsset::Register(U"dog", U"data//dog.mp3");
 	m_effectBackgroundStopwatch.start();
 	const INIData configINI(U"data//config.ini");
 	exitFlag = !configINI.get<bool>(U"Demo", U"flag");
@@ -77,6 +78,9 @@ void Category::update()
 		m_effect.add<TitleBackGroundEffect>();
 		m_effectBackgroundStopwatch.restart();
 	}
+
+	// 隠し要素
+	if (KeyShift.pressed() && KeyD.pressed() && KeyO.pressed() && KeyG.pressed()) AudioAsset(U"dog").play();
 }
 
 // 描画
