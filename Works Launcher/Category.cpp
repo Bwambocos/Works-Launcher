@@ -17,9 +17,11 @@ Category::Category(const InitData& init) : IScene(init)
 	TextureAsset::Register(U"choicesImage0", U"data//Category//musicImage.png");
 	TextureAsset::Register(U"choicesImage1", U"data//Category//gamesImage.png");
 	TextureAsset::Register(U"choicesImage2", U"data//Category//graphicsImage.png");
+	TextureAsset::Register(U"lightIcon", Icon(0xf0eb, 48));
 	choicesStrs << U"音楽";
 	choicesStrs << U"ゲーム";
 	choicesStrs << U"デザイン";
+	lightIconPos = Vec2(Scene::Width() - TextureAsset(U"lightIcon").width() - 10, 10);
 	const INIData configINI(U"data//config.ini");
 	exitFlag = !configINI.get<bool>(U"Demo", U"flag");
 }
@@ -27,6 +29,9 @@ Category::Category(const InitData& init) : IScene(init)
 // 更新
 void Category::update()
 {
+	// 描画モード切替
+	if (TextureAsset(U"lightIcon").region(lightIconPos).leftClicked()) setDrawMode(getData());
+
 	if (exitRect.mouseOver() || choicesRects[0].mouseOver() || choicesRects[1].mouseOver() || choicesRects[2].mouseOver()) Cursor::RequestStyle(CursorStyle::Hand);
 	if (exitRect.leftClicked())
 	{
@@ -59,10 +64,13 @@ void Category::update()
 // 描画
 void Category::draw() const
 {
-	titleRect.draw(Color(AppInfo::schemeColor2, 200)).drawFrame(1, AppInfo::schemeColor3);
-	FontAsset(U"Category-largeFont")(U"作品の種類を選択して下さい").drawAt(titleRect.center(), Palette::White);
-	exitRect.draw(Color(AppInfo::schemeColor2, (exitRect.mouseOver() ? 200 : 100))).drawFrame(1, AppInfo::schemeColor3);
-	FontAsset(U"Category-largeFont")(U"終了する").drawAt(exitRect.center(), Palette::White);
+	// 描画モード切替
+	TextureAsset(U"lightIcon").draw(lightIconPos, (TextureAsset(U"lightIcon").region(lightIconPos).mouseOver() ? getData().schemeColor5 : getData().schemeColor4));
+
+	titleRect.draw(Color(getData().schemeColor2, 200)).drawFrame(1, getData().schemeColor3);
+	FontAsset(U"Category-largeFont")(U"作品の種類を選択して下さい").drawAt(titleRect.center(), getData().stringColor);
+	exitRect.draw(Color(getData().schemeColor2, (exitRect.mouseOver() ? 200 : 100))).drawFrame(1, getData().schemeColor3);
+	FontAsset(U"Category-largeFont")(U"終了する").drawAt(exitRect.center(), getData().stringColor);
 
 	for (auto i : step(choicesNum))
 	{
@@ -71,11 +79,11 @@ void Category::draw() const
 			choicesRects[i]
 				.stretched(6)
 				.drawShadow(Vec2(0, 3), 8, 0)
-				.draw(AppInfo::backgroundColor)
-				.drawFrame(5, 0, ColorF(AppInfo::schemeColor5, 0.4 + Periodic::Sine0_1(1s) * 0.6));
+				.draw(getData().schemeColor1)
+				.drawFrame(5, 0, ColorF(getData().schemeColor5, 0.4 + Periodic::Sine0_1(1s) * 0.6));
 		}
-		else choicesRects[i].drawFrame(1, AppInfo::schemeColor4);
-		choicesRects[i](TextureAsset(U"choicesImage" + Format(i))).draw(Color(AppInfo::schemeColor3, (choicesRects[i].mouseOver() ? 200 : 100)));
-		FontAsset(U"Category-midFont")(choicesStrs[i]).drawAt(choicesRects[i].center(), Palette::White);
+		else choicesRects[i].drawFrame(1, getData().schemeColor4);
+		choicesRects[i](TextureAsset(U"choicesImage" + Format(i))).draw(Color(getData().schemeColor3, (choicesRects[i].mouseOver() ? 200 : 100)));
+		FontAsset(U"Category-midFont")(choicesStrs[i]).drawAt(choicesRects[i].center(), getData().stringColor);
 	}
 }

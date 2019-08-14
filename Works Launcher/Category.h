@@ -11,6 +11,7 @@ private:
 	Rect titleRect, exitRect;
 	Array<Rect>choicesRects;
 	Array<String>choicesStrs;
+	Vec2 lightIconPos;
 	bool exitFlag;
 
 public:
