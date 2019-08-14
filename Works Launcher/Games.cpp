@@ -3,24 +3,6 @@
 
 // ゲーム選択画面
 
-struct TitleBackGroundEffect : IEffect
-{
-	Line m_line;
-
-	TitleBackGroundEffect()
-	{
-		const Vec2 pos = RandomVec2(Scene::Width(), Scene::Height());
-		const Vec2 direction = Circular(Scene::Width() + Scene::Height(), Random(360_deg));
-		m_line.set(pos - direction, pos + direction);
-	}
-
-	bool update(double timeSec)
-	{
-		m_line.draw(2, AlphaF((1.0 - Abs(timeSec - 1.0)) * 0.3));
-		return timeSec < 2.0;
-	}
-};
-
 // 初期化
 Games::Games(const InitData& init) : IScene(init)
 {
@@ -88,7 +70,12 @@ Games::Games(const InitData& init) : IScene(init)
 void Games::update()
 {
 	// 描画モード切替
-	if (TextureAsset(U"lightIcon").region(lightIconPos).leftClicked()) setDrawMode(getData());
+	if (TextureAsset(U"lightIcon").region(lightIconPos).leftClicked())
+	{
+		AudioAsset(U"cursorAudio").stop();
+		AudioAsset(U"cursorAudio").play();
+		setDrawMode(getData());
+	}
 
 	// ウィンドウの最小化・復帰
 	if (process)
@@ -112,7 +99,12 @@ void Games::update()
 	}
 
 	// メニューへ戻る
-	if (TextureAsset(U"Games-homeIcon").region(homeIconPos).leftClicked()) changeScene(U"Category");
+	if (TextureAsset(U"Games-homeIcon").region(homeIconPos).leftClicked())
+	{
+		AudioAsset(U"cursorAudio").stop();
+		AudioAsset(U"cursorAudio").play();
+		changeScene(U"Category");
+	}
 
 	// 背景エフェクト
 	if (m_effectBackgroundStopwatch.elapsed() > 50ms)
@@ -124,15 +116,31 @@ void Games::update()
 	// ゲーム起動・説明書表示
 	Game& game = games[selectedGameIndex];
 	if (playRect.mouseOver() || readmeRect.mouseOver()) Cursor::RequestStyle(CursorStyle::Hand);
-	if (playRect.leftClicked()) process = s3dx::System::CreateProcess(game.path);
-	if (readmeRect.leftClicked()) process = s3dx::System::CreateProcess(U"C://Windows//system32//notepad.exe", U"/A " + game.readme);
+	if (playRect.leftClicked())
+	{
+		AudioAsset(U"cursorAudio").stop();
+		AudioAsset(U"cursorAudio").play();
+		process = s3dx::System::CreateProcess(game.path);
+	}
+	if (readmeRect.leftClicked())
+	{
+		AudioAsset(U"cursorAudio").stop();
+		AudioAsset(U"cursorAudio").play();
+		process = s3dx::System::CreateProcess(U"C://Windows//system32//notepad.exe", U"/A " + game.readme);
+	}
 
 	// 選択しているタイルの変更
+	auto temp = selectedGameIndex;
 	for (auto i : step(games.size()))
 	{
 		const Vec2 center = baseTilePos.movedBy(tileOffsetX + i * (tileSize * 2), 0);
 		const RectF tile(Arg::center = center, tileSize);
-		if (tile.leftClicked()) selectedGameIndex = i;
+		if (tile.leftClicked())
+		{
+			AudioAsset(U"cursorAudio").stop();
+			AudioAsset(U"cursorAudio").play();
+			selectedGameIndex = i;
+		}
 		if (tile.mouseOver()) Cursor::RequestStyle(CursorStyle::Hand);
 	}
 	if (KeyLeft.down() || TextureAsset(U"Games-leftIcon").region(leftIconPos).leftClicked()) selectedGameIndex--;
@@ -140,6 +148,11 @@ void Games::update()
 	selectedGameIndex += Mouse::Wheel();
 	selectedGameIndex = Max((long long)selectedGameIndex, 0LL);
 	selectedGameIndex = Min<unsigned long long>(selectedGameIndex, (long long)games.size() - 1);
+	if (temp != selectedGameIndex)
+	{
+		AudioAsset(U"cursorAudio").stop();
+		AudioAsset(U"cursorAudio").play();
+	}
 
 	// タイル表示のスクロール更新
 	const Vec2 center = baseTilePos.movedBy(targetTileOffsetX + selectedGameIndex * (tileSize * 2), 0);
