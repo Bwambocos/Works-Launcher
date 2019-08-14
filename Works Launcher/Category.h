@@ -12,6 +12,8 @@ private:
 	Array<Rect>choicesRects;
 	Array<String>choicesStrs;
 	Vec2 lightIconPos;
+	Effect m_effect;
+	Stopwatch m_effectBackgroundStopwatch, gameplayStopwatch;
 	bool exitFlag;
 
 public:

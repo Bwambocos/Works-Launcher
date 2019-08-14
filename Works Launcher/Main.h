@@ -29,7 +29,7 @@ static MyApp manager;
 // ダークモードとライトモードを切り替える
 void setDrawMode(AppData& data);
 
-// 背景アニメーション
+// 背景エフェクト
 struct TitleBackGroundEffect : IEffect
 {
 	Line m_line;

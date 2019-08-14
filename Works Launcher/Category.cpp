@@ -23,6 +23,7 @@ Category::Category(const InitData& init) : IScene(init)
 	choicesStrs << U"デザイン";
 	lightIconPos = Vec2(Scene::Width() - TextureAsset(U"lightIcon").width() - 10, 10);
 	AudioAsset::Register(U"cursorAudio", U"data//cursorAudio.mp3");
+	m_effectBackgroundStopwatch.start();
 	const INIData configINI(U"data//config.ini");
 	exitFlag = !configINI.get<bool>(U"Demo", U"flag");
 }
@@ -69,11 +70,23 @@ void Category::update()
 			countINI.save(U"data//Category//logs.ini");
 		}
 	}
+
+	// 背景エフェクト
+	if (m_effectBackgroundStopwatch.elapsed() > 50ms)
+	{
+		m_effect.add<TitleBackGroundEffect>();
+		m_effectBackgroundStopwatch.restart();
+	}
 }
 
 // 描画
 void Category::draw() const
 {
+	// 背景エフェクト
+	Graphics2D::SetBlendState(BlendState::Additive);
+	m_effect.update();
+	Graphics2D::SetBlendState(BlendState::Default);
+
 	// 描画モード切替
 	TextureAsset(U"lightIcon").draw(lightIconPos, (TextureAsset(U"lightIcon").region(lightIconPos).mouseOver() ? getData().schemeColor5 : getData().schemeColor4));
 
