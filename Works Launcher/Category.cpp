@@ -22,6 +22,7 @@ Category::Category(const InitData& init) : IScene(init)
 	choicesStrs << U"ゲーム";
 	choicesStrs << U"デザイン";
 	lightIconPos = Vec2(Scene::Width() - TextureAsset(U"lightIcon").width() - 10, 10);
+	AudioAsset::Register(U"cursorAudio", U"data//cursorAudio.mp3");
 	const INIData configINI(U"data//config.ini");
 	exitFlag = !configINI.get<bool>(U"Demo", U"flag");
 }
@@ -30,11 +31,18 @@ Category::Category(const InitData& init) : IScene(init)
 void Category::update()
 {
 	// 描画モード切替
-	if (TextureAsset(U"lightIcon").region(lightIconPos).leftClicked()) setDrawMode(getData());
+	if (TextureAsset(U"lightIcon").region(lightIconPos).leftClicked())
+	{
+		AudioAsset(U"cursorAudio").stop();
+		AudioAsset(U"cursorAudio").play();
+		setDrawMode(getData());
+	}
 
 	if (exitRect.mouseOver() || choicesRects[0].mouseOver() || choicesRects[1].mouseOver() || choicesRects[2].mouseOver()) Cursor::RequestStyle(CursorStyle::Hand);
 	if (exitRect.leftClicked())
 	{
+		AudioAsset(U"cursorAudio").stop();
+		AudioAsset(U"cursorAudio").play();
 		if (exitFlag)
 		{
 			if (System::ShowMessageBox(U"終了確認", U"本当に終了しますか？", MessageBoxButtons::YesNo) == MessageBoxSelection::Yes) System::Exit();
@@ -46,6 +54,8 @@ void Category::update()
 	{
 		if (choicesRects[i].leftClicked())
 		{
+			AudioAsset(U"cursorAudio").stop();
+			AudioAsset(U"cursorAudio").play();
 			if (i == 0) s3dx::System::CreateProcess(U"data//MusicRoom//MusicRoom.exe", U"");
 			if (i == 1) changeScene(U"Games");
 			if (i == 2) s3dx::System::CreateProcess(U"data//CombViewer//CombViewer.exe", U"");
