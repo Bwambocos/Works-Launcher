@@ -17,14 +17,9 @@ Category::Category(const InitData& init) : IScene(init)
 	TextureAsset::Register(U"choicesImage0", U"data//Category//musicImage.png");
 	TextureAsset::Register(U"choicesImage1", U"data//Category//gamesImage.png");
 	TextureAsset::Register(U"choicesImage2", U"data//Category//graphicsImage.png");
-	TextureAsset::Register(U"lightIcon", Icon(0xf0eb, 48));
 	choicesStrs << U"音楽";
 	choicesStrs << U"ゲーム";
 	choicesStrs << U"デザイン";
-	lightIconPos = Vec2(Scene::Width() - TextureAsset(U"lightIcon").width() - 10, 10);
-	AudioAsset::Register(U"cursorAudio", U"data//cursorAudio.mp3");
-	AudioAsset::Register(U"dog", U"data//dog.mp3");
-	m_effectBackgroundStopwatch.start();
 	const INIData configINI(U"data//config.ini");
 	exitFlag = !configINI.get<bool>(U"Demo", U"flag");
 }
@@ -32,14 +27,6 @@ Category::Category(const InitData& init) : IScene(init)
 // 更新
 void Category::update()
 {
-	// 描画モード切替
-	if (TextureAsset(U"lightIcon").region(lightIconPos).leftClicked())
-	{
-		AudioAsset(U"cursorAudio").stop();
-		AudioAsset(U"cursorAudio").play();
-		setDrawMode(getData());
-	}
-
 	if (exitRect.mouseOver() || choicesRects[0].mouseOver() || choicesRects[1].mouseOver() || choicesRects[2].mouseOver()) Cursor::RequestStyle(CursorStyle::Hand);
 	if (exitRect.leftClicked())
 	{
@@ -71,29 +58,11 @@ void Category::update()
 			countINI.save(U"data//Category//logs.ini");
 		}
 	}
-
-	// 背景エフェクト
-	if (m_effectBackgroundStopwatch.elapsed() > 50ms)
-	{
-		m_effect.add<TitleBackGroundEffect>();
-		m_effectBackgroundStopwatch.restart();
-	}
-
-	// 隠し要素
-	if (KeyShift.pressed() && KeyD.pressed() && KeyO.pressed() && KeyG.pressed()) AudioAsset(U"dog").play();
 }
 
 // 描画
 void Category::draw() const
 {
-	// 背景エフェクト
-	Graphics2D::SetBlendState(BlendState::Additive);
-	m_effect.update();
-	Graphics2D::SetBlendState(BlendState::Default);
-
-	// 描画モード切替
-	TextureAsset(U"lightIcon").draw(lightIconPos, (TextureAsset(U"lightIcon").region(lightIconPos).mouseOver() ? getData().schemeColor5 : getData().schemeColor4));
-
 	titleRect.draw(Color(getData().schemeColor2, 200)).drawFrame(1, getData().schemeColor3);
 	FontAsset(U"Category-largeFont")(U"作品の種類を選択して下さい").drawAt(titleRect.center(), getData().stringColor);
 	exitRect.draw(Color(getData().schemeColor2, (exitRect.mouseOver() ? 200 : 100))).drawFrame(1, getData().schemeColor3);

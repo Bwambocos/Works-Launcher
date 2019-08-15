@@ -25,11 +25,10 @@ private:
 	Array<Game>games;
 	Optional<s3dx::ProcessInfo>process;
 	size_t selectedGameIndex = 0;
-	Vec2 baseTilePos, leftIconPos, rightIconPos, homeIconPos, lightIconPos;
+	Vec2 baseTilePos, leftIconPos, rightIconPos, homeIconPos;
 	Rect tileBackgroundRect, imageBackgroundRect, playRect, readmeRect, titleRect, descRect, creditRect, toolsRect, timeRect;
 	Quad rectHeader;
-	Effect m_effect;
-	Stopwatch m_effectBackgroundStopwatch, gameplayStopwatch;
+	Stopwatch gameplayStopwatch;
 	double tileOffsetX = 0., targetTileOffsetX = 0., tileOffsetXVelocity = 0.;
 
 public:

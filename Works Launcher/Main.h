@@ -25,25 +25,3 @@ struct AppData
 
 using MyApp = SceneManager<String, AppData>;
 static MyApp manager;
-
-// ダークモードとライトモードを切り替える
-void setDrawMode(AppData& data);
-
-// 背景エフェクト
-struct TitleBackGroundEffect : IEffect
-{
-	Line m_line;
-
-	TitleBackGroundEffect()
-	{
-		const Vec2 pos = RandomVec2(Scene::Width(), Scene::Height());
-		const Vec2 direction = Circular(Scene::Width() + Scene::Height(), Random(360_deg));
-		m_line.set(pos - direction, pos + direction);
-	}
-
-	bool update(double timeSec)
-	{
-		m_line.draw(2, AlphaF((1.0 - Abs(timeSec - 1.0)) * 0.3));
-		return timeSec < 2.0;
-	}
-};

@@ -60,23 +60,13 @@ Games::Games(const InitData& init) : IScene(init)
 	timeRect = Rect(toolsRect.x + toolsRect.w + 25, toolsRect.y, toolsRect.w, FontAsset(U"Games-smallFont").height() + 5);
 	leftIconPos = Vec2(5, Scene::Height() - TextureAsset(U"Games-leftIcon").height() - 2.5);
 	rightIconPos = Vec2(Scene::Width() - TextureAsset(U"Games-rightIcon").width() - 5, Scene::Height() - TextureAsset(U"Games-rightIcon").height() - 2.5);
-	homeIconPos = Vec2(Scene::Width() - TextureAsset(U"Games-homeIcon").width() - 5, 5);
-	lightIconPos = Vec2(homeIconPos.x - TextureAsset(U"lightIcon").width() - 5, 5);
+	homeIconPos = Vec2(Scene::Width() - TextureAsset(U"Games-homeIcon").width() - TextureAsset(U"lightIcon").width() - 15, 5);
 	rectHeader = Quad(Vec2(0, 0), Vec2(125, 0), Vec2(125 + FontAsset(U"Games-smallFont").height(), FontAsset(U"Games-smallFont").height()), Vec2(0, FontAsset(U"Games-smallFont").height()));
-	m_effectBackgroundStopwatch.start();
 }
 
 // 更新
 void Games::update()
 {
-	// 描画モード切替
-	if (TextureAsset(U"lightIcon").region(lightIconPos).leftClicked())
-	{
-		AudioAsset(U"cursorAudio").stop();
-		AudioAsset(U"cursorAudio").play();
-		setDrawMode(getData());
-	}
-
 	// ウィンドウの最小化・復帰
 	if (process)
 	{
@@ -104,13 +94,6 @@ void Games::update()
 		AudioAsset(U"cursorAudio").stop();
 		AudioAsset(U"cursorAudio").play();
 		changeScene(U"Category");
-	}
-
-	// 背景エフェクト
-	if (m_effectBackgroundStopwatch.elapsed() > 50ms)
-	{
-		m_effect.add<TitleBackGroundEffect>();
-		m_effectBackgroundStopwatch.restart();
 	}
 
 	// ゲーム起動・説明書表示
@@ -160,9 +143,6 @@ void Games::update()
 	if (tile.x <= 0) targetTileOffsetX += tileSize;
 	else if (Scene::Width() <= tile.tr().x) targetTileOffsetX -= tileSize;
 	tileOffsetX = Math::SmoothDamp(tileOffsetX, targetTileOffsetX, tileOffsetXVelocity, 0.1, Scene::DeltaTime());
-
-	// 隠し要素
-	if (KeyShift.pressed() && KeyD.pressed() && KeyO.pressed() && KeyG.pressed()) AudioAsset(U"dog").play();
 }
 
 // 描画
@@ -170,14 +150,6 @@ void Games::draw() const
 {
 	// メニューへ戻る
 	TextureAsset(U"Games-homeIcon").draw(homeIconPos, (TextureAsset(U"Games-homeIcon").region(homeIconPos).mouseOver() ? getData().schemeColor5 : getData().schemeColor4));
-
-	// 描画モード切替
-	TextureAsset(U"lightIcon").draw(lightIconPos, (TextureAsset(U"lightIcon").region(lightIconPos).mouseOver() ? getData().schemeColor5 : getData().schemeColor4));
-
-	// 背景エフェクト
-	Graphics2D::SetBlendState(BlendState::Additive);
-	m_effect.update();
-	Graphics2D::SetBlendState(BlendState::Default);
 
 	// タイル
 	tileBackgroundRect.draw(getData().schemeColor2);
