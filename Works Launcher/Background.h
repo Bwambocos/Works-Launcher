@@ -10,7 +10,9 @@ private:
 
 	Array<std::pair<Line, Stopwatch>>m_effect;
 	Stopwatch m_effectStopwatch;
+	Timer demoTimer;
 	Vec2 lightIconPos;
+	bool demoFlag;
 
 public:
 

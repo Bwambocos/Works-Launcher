@@ -73,7 +73,6 @@ void Games::update()
 		if (process->isRunning())
 		{
 			if (!gameplayStopwatch.isRunning()) gameplayStopwatch.restart();
-			Window::Minimize();
 			return;
 		}
 		else

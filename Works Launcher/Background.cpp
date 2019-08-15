@@ -9,8 +9,13 @@ void Background::init()
 	TextureAsset::Register(U"lightIcon", Icon(0xf0eb, 38));
 	AudioAsset::Register(U"cursorAudio", U"data//cursorAudio.mp3");
 	AudioAsset::Register(U"dog", U"data//dog.mp3");
+	FontAsset::Register(U"timerFont", 16, U"data//fontR.ttc");
+	FontAsset::Register(U"messageFont", 72, U"data//fontR.ttc", FontStyle::Bold);
 	m_effectStopwatch.start();
 	lightIconPos = Vec2(Scene::Width() - TextureAsset(U"lightIcon").width() - 10, 10);
+	const INIData configINI(U"data//config.ini");
+	demoFlag = configINI.get<bool>(U"Demo", U"flag");
+	if (demoFlag) demoTimer = Timer(configINI.get<double>(U"Demo", U"limit_time"), true);
 }
 
 // 更新
@@ -33,6 +38,25 @@ bool Background::update(AppData& data)
 		m_effectStopwatch.restart();
 	}
 
+	// タイマー
+	if (demoFlag)
+	{
+		if (KeyShift.pressed() && KeyAlt.pressed() && KeyControl.pressed() && KeyR.pressed())
+		{
+			Window::SetFullscreen(false);
+			Window::Restore();
+			demoTimer.restart();
+			return true;
+		}
+		if (demoTimer.reachedZero())
+		{
+			Window::SetFullscreen(true);
+			FontAsset(U"messageFont")(U"時間制限に達しました．\n大変申し訳ありませんが，交代をお願いします．").drawAt(Scene::Center(), data.stringColor);
+			return false;
+		}
+	}
+
+
 	// 隠し要素
 	if (KeyShift.pressed() && KeyD.pressed() && KeyO.pressed() && KeyG.pressed()) AudioAsset(U"dog").play();
 
@@ -43,13 +67,16 @@ bool Background::update(AppData& data)
 void Background::draw(AppData& data)
 {
 	// 描画モード切替
-	TextureAsset(U"lightIcon").draw(lightIconPos, (TextureAsset(U"lightIcon").region(lightIconPos).mouseOver() ? data.schemeColor5 : data.schemeColor4));
+	if (!(demoFlag && demoTimer.reachedZero())) TextureAsset(U"lightIcon").draw(lightIconPos, (TextureAsset(U"lightIcon").region(lightIconPos).mouseOver() ? data.schemeColor5 : data.schemeColor4));
 
 	// 背景エフェクト
 	for (auto line : m_effect)
 	{
 		if (line.second.sF() < 2.) line.first.draw(2, AlphaF((1.0 - Abs(line.second.sF() - 1.0)) * 0.3));
 	}
+
+	// タイマー
+	if (demoFlag) FontAsset(U"timerFont")(U"残り時間：" + demoTimer.format(U"mm:ss.xx")).draw(5, 5, data.stringColor);
 }
 
 // ダークモードとライトモードを切り替える
