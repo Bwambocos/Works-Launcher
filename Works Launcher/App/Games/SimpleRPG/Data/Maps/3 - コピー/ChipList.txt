@@ -1,0 +1,5 @@
+4
+water
+map
+tree
+house

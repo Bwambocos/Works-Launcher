@@ -108,6 +108,10 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Background.cpp" />
+    <ClCompile Include="Category.cpp" />
+    <ClCompile Include="CreateProcess.cpp" />
+    <ClCompile Include="Games.cpp" />
     <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -189,6 +193,13 @@
   </ItemGroup>
   <ItemGroup>
     <Xml Include="App\example\test.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Background.h" />
+    <ClInclude Include="Category.h" />
+    <ClInclude Include="CreateProcess.h" />
+    <ClInclude Include="Games.h" />
+    <ClInclude Include="Main.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,0 +1,10 @@
+9
+water
+map
+w
+damage
+tsuchi
+tree
+snow
+house
+mao
