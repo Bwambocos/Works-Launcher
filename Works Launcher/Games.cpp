@@ -37,19 +37,19 @@ Games::Games(const InitData& init) : IScene(init)
 	FontAsset::Register(U"Games-largeFont", 36, U"data//fontR.ttc", FontStyle::Bold);
 	FontAsset::Register(U"Games-midFont", 24, U"data//fontR.ttc");
 	FontAsset::Register(U"Games-smallFont", 18, U"data//fontR.ttc");
-	TextureAsset::Register(U"Games-playIcon", Icon(0xf144, FontAsset(U"Games-largeFont").height() - 7.5));
-	TextureAsset::Register(U"Games-readmeIcon", Icon(0xf05a, FontAsset(U"Games-largeFont").height() - 7.5));
-	TextureAsset::Register(U"Games-imageIcon", Icon(0xf03e, FontAsset(U"Games-smallFont").height() - 7.5));
-	TextureAsset::Register(U"Games-titleIcon", Icon(0xf11b, FontAsset(U"Games-smallFont").height() - 7.5));
-	TextureAsset::Register(U"Games-descIcon", Icon(0xf075, FontAsset(U"Games-smallFont").height() - 7.5));
-	TextureAsset::Register(U"Games-creditIcon", Icon(0xf0c0, FontAsset(U"Games-smallFont").height() - 7.5));
-	TextureAsset::Register(U"Games-toolsIcon", Icon(0xf7d9, FontAsset(U"Games-smallFont").height() - 7.5));
-	TextureAsset::Register(U"Games-timeIcon", Icon(0xf1da, FontAsset(U"Games-smallFont").height() - 7.5));
+	TextureAsset::Register(U"Games-playIcon", Icon(0xf144, FontAsset(U"Games-largeFont").height() - 8));
+	TextureAsset::Register(U"Games-readmeIcon", Icon(0xf05a, FontAsset(U"Games-largeFont").height() - 8));
+	TextureAsset::Register(U"Games-imageIcon", Icon(0xf03e, FontAsset(U"Games-smallFont").height() - 8));
+	TextureAsset::Register(U"Games-titleIcon", Icon(0xf11b, FontAsset(U"Games-smallFont").height() - 8));
+	TextureAsset::Register(U"Games-descIcon", Icon(0xf075, FontAsset(U"Games-smallFont").height() - 8));
+	TextureAsset::Register(U"Games-creditIcon", Icon(0xf0c0, FontAsset(U"Games-smallFont").height() - 8));
+	TextureAsset::Register(U"Games-toolsIcon", Icon(0xf7d9, FontAsset(U"Games-smallFont").height() - 8));
+	TextureAsset::Register(U"Games-timeIcon", Icon(0xf1da, FontAsset(U"Games-smallFont").height() - 8));
 	TextureAsset::Register(U"Games-leftIcon", Icon(0xf137, 42));
 	TextureAsset::Register(U"Games-rightIcon", Icon(0xf138, 42));
 	TextureAsset::Register(U"Games-homeIcon", Icon(0xf015, 48));
 	baseTilePos = Vec2(100, Scene::Height() - 50 - tileSize / 2);
-	tileBackgroundRect = Rect(0, Scene::Height() - 25 - tileSize / 2, Scene::Width(), 25 + tileSize / 2);
+	tileBackgroundRect = Rect(0, Scene::Height() - 25 - (int)tileSize / 2, Scene::Width(), 25 + (int)tileSize / 2);
 	imageBackgroundRect = Rect(50, 50, 640, 360);
 	playRect = Rect(50, imageBackgroundRect.y + imageBackgroundRect.h + 25, (imageBackgroundRect.w - 25) / 2, FontAsset(U"Games-largeFont").height() + 5);
 	readmeRect = Rect(playRect.x + playRect.w + 25, imageBackgroundRect.y + imageBackgroundRect.h + 25, playRect.w, FontAsset(U"Games-largeFont").height() + 5);
@@ -127,7 +127,7 @@ void Games::update()
 	}
 	if (KeyLeft.down() || TextureAsset(U"Games-leftIcon").region(leftIconPos).leftClicked()) selectedGameIndex--;
 	if (KeyRight.down() || TextureAsset(U"Games-rightIcon").region(rightIconPos).leftClicked()) selectedGameIndex++;
-	selectedGameIndex += Mouse::Wheel();
+	selectedGameIndex += (size_t)Mouse::Wheel();
 	selectedGameIndex = Max((long long)selectedGameIndex, 0LL);
 	selectedGameIndex = Min<unsigned long long>(selectedGameIndex, (long long)games.size() - 1);
 	if (temp != selectedGameIndex)
@@ -189,15 +189,15 @@ void Games::draw() const
 	// ゲーム情報
 	const Game& game = games[selectedGameIndex];
 	drawStrBackground(titleRect, U"ゲーム名", U"Games-titleIcon");
-	FontAsset(U"Games-largeFont")(game.title).draw(titleRect.stretched(-5, -2.5), getData().stringColor);
+	FontAsset(U"Games-largeFont")(game.title).draw(titleRect.stretched(-5, -2), getData().stringColor);
 	drawStrBackground(descRect, U"ゲーム説明", U"Games-descIcon");
-	FontAsset(U"Games-midFont")(game.desc).draw(descRect.stretched(-5, -2.5), getData().stringColor);
+	FontAsset(U"Games-midFont")(game.desc).draw(descRect.stretched(-5, -2), getData().stringColor);
 	drawStrBackground(creditRect, U"クレジット", U"Games-creditIcon");
-	FontAsset(U"Games-smallFont")(game.credit).draw(creditRect.stretched(-5, -2.5), getData().stringColor);
+	FontAsset(U"Games-smallFont")(game.credit).draw(creditRect.stretched(-5, -2), getData().stringColor);
 	drawStrBackground(toolsRect, U"開発ツール", U"Games-toolsIcon");
-	FontAsset(U"Games-smallFont")(game.tools).draw(toolsRect.stretched(-5, -2.5), getData().stringColor);
+	FontAsset(U"Games-smallFont")(game.tools).draw(toolsRect.stretched(-5, -2), getData().stringColor);
 	drawStrBackground(timeRect, U"開発期間", U"Games-timeIcon");
-	FontAsset(U"Games-smallFont")(game.time).draw(timeRect.stretched(-5, -2.5), getData().stringColor);
+	FontAsset(U"Games-smallFont")(game.time).draw(timeRect.stretched(-5, -2), getData().stringColor);
 }
 
 // ボタン描画
