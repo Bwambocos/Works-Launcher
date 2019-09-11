@@ -22,6 +22,8 @@ Category::Category(const InitData& init) : IScene(init)
 	choicesStrs << U"デザイン";
 	const INIData configINI(U"data//config.ini");
 	exitFlag = !configINI.get<bool>(U"Demo", U"flag");
+	musicPass = configINI.get<String>(U"Pass", U"music");
+	graphicsPass = configINI.get<String>(U"Pass", U"graphics");
 }
 
 // 更新
@@ -45,9 +47,9 @@ void Category::update()
 		{
 			AudioAsset(U"cursorAudio").stop();
 			AudioAsset(U"cursorAudio").play();
-			if (i == 0) s3dx::System::CreateProcess(U"data//MusicRoom//MusicRoom.exe", U"");
+			if (i == 0) s3dx::System::CreateProcess(U"Games//" + musicPass + U"//" + musicPass + U".exe", U"");
 			if (i == 1) changeScene(U"Games");
-			if (i == 2) s3dx::System::CreateProcess(U"data//CombViewer//CombViewer.exe", U"");
+			if (i == 2) s3dx::System::CreateProcess(U"Games//" + graphicsPass + U"//" + graphicsPass + U".exe", U"");
 			INIData countINI(U"data//Category//logs.ini");
 			if (countINI.isEmpty())
 			{
