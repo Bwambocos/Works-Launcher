@@ -5,7 +5,7 @@
 // 基本情報
 namespace AppInfo
 {
-	const String windowTitle = U"海城祭2019";
+	const String windowTitle = U"Works Launcher v1.5";
 	const int32 windowWidth = 1280;
 	const int32 windowHeight = 720;
 };
