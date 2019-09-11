@@ -81,7 +81,7 @@ void Category::draw() const
 				.drawFrame(5, 0, ColorF(getData().schemeColor5, 0.4 + Periodic::Sine0_1(1s) * 0.6));
 		}
 		else choicesRects[i].drawFrame(1, getData().schemeColor4);
-		choicesRects[i](TextureAsset(U"choicesImage" + Format(i))).draw(Color(getData().schemeColor3, (choicesRects[i].mouseOver() ? 200 : 100)));
+		choicesRects[i](TextureAsset(U"choicesImage" + Format(i))).draw(Color(getData().schemeColor5, (choicesRects[i].mouseOver() ? 200 : 100)));
 		FontAsset(U"Category-midFont")(choicesStrs[i]).drawAt(choicesRects[i].center(), getData().stringColor);
 	}
 }
