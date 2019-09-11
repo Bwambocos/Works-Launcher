@@ -11,6 +11,7 @@ private:
 	Rect titleRect, exitRect;
 	Array<Rect>choicesRects;
 	Array<String>choicesStrs;
+	String musicPass, graphicsPass;
 	bool exitFlag;
 
 public:
